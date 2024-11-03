@@ -70,25 +70,6 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
 }
 
 /**
- * Get the Priority Value translated
- * @param priority number for priority
- */
-function getPriorityValue(priority: NonNullable<IncomingLinearWebhookPayload['data']['priority']>) {
-  switch (priority) {
-    case 1:
-      return 'Urgent';
-    case 2:
-      return 'High';
-    case 3:
-      return 'Medium';
-    case 4:
-      return 'Low';
-    default:
-      return 'None';
-  }
-}
-
-/**
  * Formats and prettifies label(s)
  * @param labels connected labels
  */
