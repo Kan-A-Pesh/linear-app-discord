@@ -38,17 +38,12 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
           fields: [
             {
               name: 'Priority',
-              value: getPriorityValue(payload.data.priority ?? 0),
+              value: payload.data.priorityLabel,
               inline: true,
             },
             {
               name: 'Points',
               value: payload.data.estimate ?? "None",
-              inline: true,
-            },,
-            {
-              name: "Created by",
-              value: payload.actor.name,
               inline: true,
             },
             {
@@ -59,8 +54,8 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
           ],
           timestamp: new Date(),
           footer: {
-            text: `Linear App`,
-            icon_url: 'https://pbs.twimg.com/profile_images/1121592030449168385/MF6whgy1_400x400.png',
+            text: payload.actor.name,
+            icon_url: payload.actor.avatarUrl,
           },
         },
       ],
