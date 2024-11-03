@@ -67,6 +67,10 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
   
   return fetch(process.env.WEBHOOK!, {
     method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
     body: body
   });
 }
