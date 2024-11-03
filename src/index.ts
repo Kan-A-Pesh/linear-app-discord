@@ -14,7 +14,7 @@ app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', as
   const payload = req.body;
   
   if (payload.action === 'create' && payload.type === 'Issue') {
-    console.log("Got:", await newIssue(payload));
+     await newIssue(payload);
   }
 
   res.sendStatus(200);
@@ -23,10 +23,7 @@ app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', as
 app.listen(port, () => console.log(`Webhook consumer listening on port ${port}!`));
 
 function newIssue(payload: IncomingLinearWebhookPayload) {
-  console.log(process.env.WEBHOOK);
-  return fetch(process.env.WEBHOOK!, {
-    method: 'POST',
-    body: JSON.stringify({
+  const body = JSON.stringify({
       embeds: [
         {
           color: 0x4752b2,
@@ -59,7 +56,13 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
           },
         },
       ],
-    }),
+    });
+
+  console.log(body);
+  
+  return fetch(process.env.WEBHOOK!, {
+    method: 'POST',
+    body: body
   });
 }
 
