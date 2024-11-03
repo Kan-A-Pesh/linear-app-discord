@@ -12,11 +12,9 @@ app.use(express.json());
 
 app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', async (req, res) => {
   const payload = req.body;
-
-  console.log("Received: ", req.body);
   
   if (payload.action === 'create' && payload.type === 'Issue') {
-    await newIssue(payload);
+    console.log("Got:", await newIssue(payload));
   }
 
   res.sendStatus(200);
@@ -25,6 +23,7 @@ app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', as
 app.listen(port, () => console.log(`Webhook consumer listening on port ${port}!`));
 
 function newIssue(payload: IncomingLinearWebhookPayload) {
+  console.log(process.env.WEBHOOK);
   return fetch(process.env.WEBHOOK!, {
     method: 'POST',
     body: JSON.stringify({
