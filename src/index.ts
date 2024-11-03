@@ -23,6 +23,8 @@ app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', as
 app.listen(port, () => console.log(`Webhook consumer listening on port ${port}!`));
 
 function newIssue(payload: IncomingLinearWebhookPayload) {
+  console.log(payload);
+  
   const body = JSON.stringify({
       embeds: [
         {
@@ -40,7 +42,7 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
             },
             {
               name: 'Points',
-              value: payload.data.estimate,
+              value: payload.data.estimate ?? "None",
               inline: true,
             },
             {
@@ -57,8 +59,6 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
         },
       ],
     });
-
-  console.log(body);
   
   return fetch(process.env.WEBHOOK!, {
     method: 'POST',
@@ -72,8 +72,6 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
  */
 function getPriorityValue(priority: NonNullable<IncomingLinearWebhookPayload['data']['priority']>) {
   switch (priority) {
-    case 0:
-      return 'None';
     case 1:
       return 'Urgent';
     case 2:
@@ -82,6 +80,8 @@ function getPriorityValue(priority: NonNullable<IncomingLinearWebhookPayload['da
       return 'Medium';
     case 4:
       return 'Low';
+    default:
+      return 'None';
   }
 }
 
