@@ -14,7 +14,9 @@ app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', as
   const payload = req.body;
   
   if (payload.action === 'create' && payload.type === 'Issue') {
-     await newIssue(payload);
+     const res = await newIssue(payload)
+     console.log(res)
+     console.log(await res.json())
   }
 
   res.sendStatus(200);
@@ -48,7 +50,7 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
             },
             {
               name: 'Labels',
-              value: prettifyLabels(payload.data.labels!),
+              value: prettifyLabels(payload.data.labels!) ?? "N/A",
               inline: true,
             },
           ],
