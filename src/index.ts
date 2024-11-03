@@ -23,17 +23,18 @@ app.post<Request['params'], unknown, IncomingLinearWebhookPayload>('/linear', as
 app.listen(port, () => console.log(`Webhook consumer listening on port ${port}!`));
 
 function newIssue(payload: IncomingLinearWebhookPayload) {
-  console.log(payload);
+  console.log("payload", payload);
   
   const body = JSON.stringify({
       embeds: [
         {
           color: 0x4752b2,
           author: {
-            name: `Issue Created [${getId(payload.url)}]`,
+            name: `Issue Created [#${payload.data.number}]`,
           },
           title: payload.data.title,
           url: payload.url,
+          description: payload.data.description,
           fields: [
             {
               name: 'Priority',
@@ -44,11 +45,16 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
               name: 'Points',
               value: payload.data.estimate ?? "None",
               inline: true,
+            },,
+            {
+              name: "Created by",
+              value: payload.actor.name,
+              inline: true,
             },
             {
               name: 'Labels',
               value: prettifyLabels(payload.data.labels!),
-              inline: false,
+              inline: true,
             },
           ],
           timestamp: new Date(),
@@ -59,6 +65,8 @@ function newIssue(payload: IncomingLinearWebhookPayload) {
         },
       ],
     });
+
+  console.log("body", body);
   
   return fetch(process.env.WEBHOOK!, {
     method: 'POST',
@@ -83,14 +91,6 @@ function getPriorityValue(priority: NonNullable<IncomingLinearWebhookPayload['da
     default:
       return 'None';
   }
-}
-
-/**
- * Get the task ID from url
- * @param link task url
- */
-function getId(link: string) {
-  return link.split('/')[5];
 }
 
 /**
