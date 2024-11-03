@@ -1,6 +1,7 @@
 export interface IncomingLinearWebhookPayload {
   action: 'create' | 'update' | 'remove';
   data: Data;
+  actor: any;
   type: string;
   createdAt: string;
   updatedFrom?: UpdatedFrom;
